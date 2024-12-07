@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtHelper {
@@ -23,14 +24,14 @@ public class JwtHelper {
     @Value("${auth.jwt.refreshTokenExpirationHour}")
     private long refreshTokenExpirationHour;
 
-    public String generateAccessToken(Long memberId, AuthoritiesName role) {
+    public String generateAccessToken(String username, AuthoritiesName role) {
         Instant now = Instant.now();
         Claims claims = Jwts.claims().build();
-        claims.put("role", role);
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(memberId.toString())
+                .subject(username)
+                .claim("authorities", Map.of("role", role))
                 .issuer(issuer)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusSeconds(accessTokenExpirationHour * 3600)))
@@ -38,14 +39,14 @@ public class JwtHelper {
                 .compact();
     }
 
-    public String generateRefreshToken(Long memberId) {
+    public String generateRefreshToken(String memberId) {
         Instant now = Instant.now();
         Claims claims = Jwts.claims().build();
 
         return Jwts.builder()
                 .claims(claims)
                 .issuer(issuer)
-                .subject(memberId.toString())
+                .subject(memberId)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusSeconds(refreshTokenExpirationHour * 3600)))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))

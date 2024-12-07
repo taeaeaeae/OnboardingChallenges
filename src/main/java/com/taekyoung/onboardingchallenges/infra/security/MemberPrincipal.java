@@ -8,10 +8,10 @@ import java.util.Collection;
 import java.util.Collections;
 
 public record MemberPrincipal(
-        Long id,
+        String id,
         Collection<GrantedAuthority> authorities
 ) {
-    public MemberPrincipal(long id, AuthoritiesName role) {
+    public MemberPrincipal(String id, AuthoritiesName role) {
         this(id, Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.name())));
     }
 }
