@@ -21,7 +21,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id = null;
-
+    @Column(unique = true, nullable = false)
     private String username;
     private String nickname;
     private String password;

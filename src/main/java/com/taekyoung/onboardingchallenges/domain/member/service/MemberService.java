@@ -36,7 +36,7 @@ public class MemberService {
     }
 
     public SignResponse sign(SignRequest request) {
-        Member member = memberRepository.findByUsername(request.username()).orElseThrow(() -> new RuntimeException("회원정보가 없습니다."));
+        Member member = memberRepository.findByUsername(request.username());
         if(passwordEncoder.matches(request.password(), member.getPassword())) {
             return new SignResponse(
                     jwtHelper.generateAccessToken(

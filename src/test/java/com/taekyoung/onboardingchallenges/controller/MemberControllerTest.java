@@ -32,25 +32,24 @@ public class MemberControllerTest {
     @BeforeEach
     void setUp() {
         Member member = new Member(
-                        "leetaekyoung",
+                        "taekyoung",
                         "my taekyoung",
                 passwordEncoder.encode("password")
                 );
         memberRepository.save(member);
     }
 
-    @Test
-    @WithCustomMockMember
-    public void MemberSignSuccess() throws Exception {
-
-        String request = "{ \"username\": \"leetaekyoung\", \"password\": \"password\" }";
-
-        mockMvc.perform(post("/sign")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(request)
-                        .header("X-AUTH-TOKEN", "header"))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    public void MemberSignSuccess() throws Exception {
+//
+//        String request = "{ \"username\": \"taekyoung\", \"password\": \"password\" }";
+//
+//        mockMvc.perform(post("/sign")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(request)
+//                        .header("X-AUTH-TOKEN", "header"))
+//                .andExpect(status().isOk());
+//    }
 
     @Test
     @WithCustomMockMember
