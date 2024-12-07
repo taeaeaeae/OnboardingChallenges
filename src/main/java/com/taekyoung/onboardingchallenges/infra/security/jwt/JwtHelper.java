@@ -39,14 +39,14 @@ public class JwtHelper {
                 .compact();
     }
 
-    public String generateRefreshToken(String memberId) {
+    public String generateRefreshToken(String username) {
         Instant now = Instant.now();
         Claims claims = Jwts.claims().build();
 
         return Jwts.builder()
                 .claims(claims)
                 .issuer(issuer)
-                .subject(memberId)
+                .subject(username)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusSeconds(refreshTokenExpirationHour * 3600)))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
