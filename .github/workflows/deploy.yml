@@ -27,6 +27,12 @@ jobs:
         mkdir -p src/main/resources
         echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > src/main/resources/application.yml
         find src
+        
+    - name: Set TEST YML
+      run: |
+        mkdir -p src/test/resources
+        echo "${{ secrets.APPLICATION_YML_TEST }}" | base64 --decode > src/test/resources/application.yml
+        find src
 
     - name: Change gradlew permissions
       run: chmod +x ./gradlew
