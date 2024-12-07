@@ -3,11 +3,17 @@ package com.taekyoung.onboardingchallenges;
 import com.taekyoung.onboardingchallenges.domain.member.dto.AuthoritiesName;
 import com.taekyoung.onboardingchallenges.infra.security.jwt.JwtHelper;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TokenTest {
@@ -15,7 +21,7 @@ public class TokenTest {
     private JwtHelper jwtHelper;
 
 
-    @BeforeEach
+    @BeforeAll
     void setUp() {
         jwtHelper = new JwtHelper();
         ReflectionTestUtils.setField(jwtHelper, "secretKey", "asdfasdfasdfag4rwegregrfedgfdgfdrsagwefafewwfe");
@@ -30,7 +36,7 @@ public class TokenTest {
                 "accessToken test",
                 AuthoritiesName.ROLE_USER
         );
-        assert token != null;
+        assertThat(token, notNullValue());
     }
 
     @Test
@@ -38,7 +44,7 @@ public class TokenTest {
         String token = jwtHelper.generateRefreshToken(
                 "refreshToken test"
         );
-        assert token != null;
+        assertThat(token, notNullValue());
     }
 
     @Test
@@ -51,6 +57,18 @@ public class TokenTest {
         Jws<Claims> claim = jwtHelper.validateTokenAndGetClaims(token);
         assert claim != null;
     }
+
+    @Test
+    public void ExpiredToken() {
+        ReflectionTestUtils.setField(jwtHelper, "accessTokenExpirationHour", -1);
+        String token = jwtHelper.generateAccessToken(
+                "accessToken test",
+                AuthoritiesName.ROLE_USER
+        );
+
+        assertThrows(ExpiredJwtException.class, () -> jwtHelper.validateTokenAndGetClaims(token));
+    }
+
 
 
 }
