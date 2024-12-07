@@ -6,7 +6,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -55,14 +54,15 @@ public class TokenTest {
         );
 
         Jws<Claims> claim = jwtHelper.validateTokenAndGetClaims(token);
-        assert claim != null;
+
+        assertThat(claim, notNullValue());
     }
 
     @Test
     public void ExpiredToken() {
         ReflectionTestUtils.setField(jwtHelper, "accessTokenExpirationHour", -1);
         String token = jwtHelper.generateAccessToken(
-                "accessToken test",
+                "token expired test",
                 AuthoritiesName.ROLE_USER
         );
 
