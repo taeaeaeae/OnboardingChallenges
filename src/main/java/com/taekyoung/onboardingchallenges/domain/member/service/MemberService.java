@@ -32,7 +32,7 @@ public class MemberService {
                             passwordEncoder.encode(request.password())
                     )).toResponse();
         }
-        else throw new RuntimeException("중복된 아이디입니다.");
+        else throw new IllegalIdentifierException("중복된 아이디입니다.");
     }
 
     public SignResponse sign(SignRequest request) {
